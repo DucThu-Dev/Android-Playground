@@ -12,8 +12,10 @@ import android.transition.TransitionManager
 import android.util.AttributeSet
 import android.util.Log
 import android.view.Surface
+import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
+import android.view.View.OnClickListener
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import androidx.annotation.RawRes
@@ -101,8 +103,74 @@ class MovieView : RelativeLayout {
         val attributes: TypedArray = context.obtainStyledAttributes(
             attrs, R.styleable.MovieView, defStyleAttr, R.style.Widget_PictureInPicture_MovieView
         )
+        setVideoResourceId(attributes.getResourceId(R.styleable.MovieView_android_src, 0))
+        setAdjustViewBounds(
+            attributes.getBoolean(
+                R.styleable.MovieView_android_adjustViewBounds, false
+            )
+        )
+        attributes.getString(R.styleable.MovieView_android_title)?.let { setTitle(it) }
+        attributes.recycle()
 
+        val listener: OnClickListener = OnClickListener { view ->
+            val id = view.id
+            if (id == R.id.surface) {
+                toggleControls()
+            } else if (id == R.id.toggle) {
+                toggle()
+            } else if (id == R.id.fast_forward) {
+                fastForwards()
+            } else if (id == R.id.fast_rewind) {
+                fastRewind()
+            } else if (id == R.id.minimize) {
+                mMovieListener?.let {
+                    it.onMovieMinimized()
+                }
+            }
 
+            mMediaPlayer?.let {
+                if (mTimeOutHandler == null) {
+                    mTimeOutHandler = TimeoutHandler(this@MovieView)
+                }
+                mTimeOutHandler?.removeMessages(TimeoutHandler.MESSAGE_HIDE_CONTROLS)
+                if (it.isPlaying) {
+                    mTimeOutHandler?.sendEmptyMessageDelayed(
+                        TimeoutHandler.MESSAGE_HIDE_CONTROLS,
+                        TIMEOUT_CONTROLS.toLong()
+                    )
+                }
+            }
+        }
+
+        mSurfaceView.setOnClickListener(listener)
+        mToggle.setOnClickListener(listener)
+        mFastForward.setOnClickListener(listener)
+        mFastRewind.setOnClickListener(listener)
+        mMinimize.setOnClickListener(listener)
+
+        mSurfaceView.holder.addCallback(
+            object : SurfaceHolder.Callback {
+                override fun surfaceCreated(holder: SurfaceHolder) {
+                    openVideo(holder.surface)
+                }
+
+                override fun surfaceChanged(
+                    holder: SurfaceHolder,
+                    format: Int,
+                    width: Int,
+                    height: Int
+                ) {
+                    // do nothing
+                }
+
+                override fun surfaceDestroyed(holder: SurfaceHolder) {
+                    mMediaPlayer?.let {
+                        mSavedCurrentPosition = it.currentPosition
+                    }
+                    closeVideo()
+                }
+            }
+        )
     }
 
     constructor(context: Context) : this(context, null, 0)
@@ -121,26 +189,20 @@ class MovieView : RelativeLayout {
             if (mAdjustViewBounds) {
                 if (widthMode == MeasureSpec.EXACTLY && heightMode != MeasureSpec.EXACTLY) {
                     super.onMeasure(
-                        widthMeasureSpec,
-                        MeasureSpec.makeMeasureSpec(
-                            (width * aspectRatio).toInt(),
-                            MeasureSpec.EXACTLY
+                        widthMeasureSpec, MeasureSpec.makeMeasureSpec(
+                            (width * aspectRatio).toInt(), MeasureSpec.EXACTLY
                         )
                     )
                 } else if (widthMode != MeasureSpec.EXACTLY && heightMode == MeasureSpec.EXACTLY) {
                     super.onMeasure(
                         MeasureSpec.makeMeasureSpec(
-                            (height / aspectRatio).toInt(),
-                            heightMeasureSpec
-                        ),
-                        heightMeasureSpec
+                            (height / aspectRatio).toInt(), heightMeasureSpec
+                        ), heightMeasureSpec
                     )
                 } else {
                     super.onMeasure(
-                        widthMeasureSpec,
-                        MeasureSpec.makeMeasureSpec(
-                            (width * aspectRatio).toInt(),
-                            MeasureSpec.EXACTLY
+                        widthMeasureSpec, MeasureSpec.makeMeasureSpec(
+                            (width * aspectRatio).toInt(), MeasureSpec.EXACTLY
                         )
                     )
                 }
@@ -253,7 +315,7 @@ class MovieView : RelativeLayout {
             it.start()
             adjustToggleState()
             keepScreenOn = true
-            mMovieListener.onMovieStarted()
+            mMovieListener?.onMovieStarted()
         }
     }
 
@@ -262,7 +324,7 @@ class MovieView : RelativeLayout {
             it.pause()
             adjustToggleState()
             keepScreenOn = false
-            mMovieListener.onMovieStopped()
+            mMovieListener?.onMovieStopped()
         }
     }
 
@@ -290,11 +352,11 @@ class MovieView : RelativeLayout {
             mMediaPlayer?.setOnCompletionListener { mediaPlayer ->
                 adjustToggleState()
                 keepScreenOn = false
-                mMovieListener.onMovieStopped()
+                mMovieListener?.onMovieStopped()
             }
         } catch (e: IOException) {
             Log.e(TAG, "Failed to open video", e)
-        }
+        }F
     }
 
     fun closeVideo() {
