@@ -25,34 +25,6 @@ import java.lang.ref.WeakReference
 
 class MovieView : RelativeLayout {
     companion object {
-        class MovieListener {
-            fun onMovieStarted() {}
-
-            fun onMovieStopped() {}
-
-            fun onMovieMinimized() {}
-        }
-
-        class TimeoutHandler(view: MovieView) : Handler(Looper.getMainLooper()) {
-
-            companion object {
-                const val MESSAGE_HIDE_CONTROLS = 1
-            }
-
-            private val mMovieViewRef: WeakReference<MovieView>
-
-            override fun handleMessage(msg: Message) {
-                if (msg.what == MESSAGE_HIDE_CONTROLS) {
-                    mMovieViewRef.get()?.hideControls()
-                } else {
-                    super.handleMessage(msg)
-                }
-            }
-
-            init {
-                mMovieViewRef = WeakReference(view)
-            }
-        }
 
         const val TAG = "MovieView"
 
@@ -356,7 +328,7 @@ class MovieView : RelativeLayout {
             }
         } catch (e: IOException) {
             Log.e(TAG, "Failed to open video", e)
-        }F
+        }
     }
 
     fun closeVideo() {
@@ -387,6 +359,35 @@ class MovieView : RelativeLayout {
         } else {
             mToggle.contentDescription = resources.getString(R.string.play)
             mToggle.setImageResource(R.drawable.ic_play_arrow_64dp)
+        }
+    }
+
+    open class MovieListener {
+        open fun onMovieStarted() {}
+
+        open fun onMovieStopped() {}
+
+        open fun onMovieMinimized() {}
+    }
+
+    open class TimeoutHandler(view: MovieView) : Handler(Looper.getMainLooper()) {
+
+        companion object {
+            const val MESSAGE_HIDE_CONTROLS = 1
+        }
+
+        private val mMovieViewRef: WeakReference<MovieView>
+
+        override fun handleMessage(msg: Message) {
+            if (msg.what == MESSAGE_HIDE_CONTROLS) {
+                mMovieViewRef.get()?.hideControls()
+            } else {
+                super.handleMessage(msg)
+            }
+        }
+
+        init {
+            mMovieViewRef = WeakReference(view)
         }
     }
 }
