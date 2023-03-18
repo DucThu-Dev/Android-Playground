@@ -48,7 +48,7 @@ class MovieView : RelativeLayout {
     private var mMediaPlayer: MediaPlayer? = null
 
     @RawRes
-    private var mVideoResourceId: Int = 0
+    private var mVideoResourceId: Int = R.raw.vid_bigbuckbunny
 
     private lateinit var mTitle: String
 

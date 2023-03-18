@@ -10,13 +10,13 @@ import android.content.IntentFilter
 import android.content.res.Configuration
 import android.graphics.drawable.Icon
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Rational
 import android.view.View
 import android.widget.Button
 import android.widget.ScrollView
 import androidx.annotation.DrawableRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import dev.ducthu.simplepictureinpicture.widget.MovieView
@@ -60,18 +60,24 @@ class MainActivity : AppCompatActivity() {
 
     private val mMovieListener = object : MovieView.MovieListener() {
         override fun onMovieStarted() {
+            updatePictureInPictureActions(
+                R.drawable.ic_pause_24dp, mPause, CONTROL_TYPE_PAUSE, REQUEST_PAUSE
+            )
         }
 
-        override fun onMovieStopped() {}
+        override fun onMovieStopped() {
+            updatePictureInPictureActions(
+                R.drawable.ic_play_arrow_24dp, mPlay, CONTROL_TYPE_PLAY, REQUEST_PLAY
+            )
+        }
 
-        override fun onMovieMinimized() {}
+        override fun onMovieMinimized() {
+            minimize()
+        }
     }
 
     fun updatePictureInPictureActions(
-        @DrawableRes iconId: Int,
-        title: String,
-        controlType: Int,
-        requestCode: Int
+        @DrawableRes iconId: Int, title: String, controlType: Int, requestCode: Int
     ) {
         val actions = mutableListOf<RemoteAction>()
 
@@ -86,17 +92,11 @@ class MainActivity : AppCompatActivity() {
         actions.add(
             RemoteAction(
                 Icon.createWithResource(
-                    this@MainActivity,
-                    R.drawable.ic_info_24dp
-                ),
-                resources.getString(R.string.info),
-                resources.getString(
+                    this@MainActivity, R.drawable.ic_info_24dp
+                ), resources.getString(R.string.info), resources.getString(
                     R.string.info_description
-                ),
-                PendingIntent.getActivity(
-                    this@MainActivity,
-                    REQUEST_INFO,
-                    Intent(
+                ), PendingIntent.getActivity(
+                    this@MainActivity, REQUEST_INFO, Intent(
                         Intent.ACTION_VIEW, Uri.parse(getString(R.string.info_uri))
                     ), 0
                 )
@@ -150,8 +150,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onPictureInPictureModeChanged(
-        isInPictureInPictureMode: Boolean,
-        newConfig: Configuration
+        isInPictureInPictureMode: Boolean, newConfig: Configuration
     ) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
         if (isInPictureInPictureMode) {
@@ -206,10 +205,7 @@ class MainActivity : AppCompatActivity() {
 
     inner class SwitchActivityOnClick() : View.OnClickListener {
         override fun onClick(v: View?) {
-            v?.let { view ->
-                startActivity(Intent(view.context, MediaSessionPlaybackActivity::class.java))
-                finish()
-            }
+            // do nothing
         }
 
     }
