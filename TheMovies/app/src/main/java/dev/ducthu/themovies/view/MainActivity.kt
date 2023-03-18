@@ -1,4 +1,4 @@
-package dev.ducthu.themovies
+package dev.ducthu.themovies.view
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
