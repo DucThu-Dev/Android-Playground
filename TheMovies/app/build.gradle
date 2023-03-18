@@ -64,16 +64,22 @@ android {
 }
 
 dependencies {
-
     // BOM
     implementation(platform("com.squareup.okhttp3:okhttp-bom:4.10.0"))
 
+    // Support library
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
     implementation 'androidx.activity:activity-compose:1.3.1'
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation 'androidx.compose.material3:material3:1.0.0-alpha11'
+
+    // Architecture components
+    implementation("androidx.lifecycle:lifecycle-viewmodel:2.3.1")
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
 
     // DI
     implementation 'com.google.dagger:dagger:2.45'
