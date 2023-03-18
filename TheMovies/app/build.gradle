@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
 }
 
 def getProperty(String filename, String propName) {
@@ -66,6 +67,8 @@ android {
 dependencies {
     // BOM
     implementation(platform("com.squareup.okhttp3:okhttp-bom:4.10.0"))
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
 
     // Support library
     implementation 'androidx.core:core-ktx:1.7.0'
