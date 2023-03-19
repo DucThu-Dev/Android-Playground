@@ -21,24 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-package com.skydoves.themovies.room.converters
+package dev.ducthu.themovies.room.convertes
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.skydoves.themovies.models.Review
+import dev.ducthu.themovies.model.Review
 
 open class ReviewListConverter {
-  @TypeConverter
-  fun fromString(value: String): List<Review>? {
-    val listType = object : TypeToken<List<Review>>() {}.type
-    return Gson().fromJson<List<Review>>(value, listType)
-  }
+    @TypeConverter
+    fun fromString(value: String): List<Review>? {
+        val listType = object : TypeToken<List<Review>>() {}.type
+        return Gson().fromJson<List<Review>>(value, listType)
+    }
 
-  @TypeConverter
-  fun fromList(list: List<Review>?): String {
-    val gson = Gson()
-    return gson.toJson(list)
-  }
+    @TypeConverter
+    fun fromList(list: List<Review>?): String {
+        val gson = Gson()
+        return gson.toJson(list)
+    }
 }

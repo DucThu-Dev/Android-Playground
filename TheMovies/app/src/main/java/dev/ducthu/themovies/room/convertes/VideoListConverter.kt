@@ -21,13 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-package com.skydoves.themovies.room.converters
+package dev.ducthu.themovies.room.convertes
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.skydoves.themovies.models.Video
+import dev.ducthu.themovies.model.Video
 
 open class VideoListConverter {
   @TypeConverter

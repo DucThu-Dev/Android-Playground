@@ -2,6 +2,7 @@ package dev.ducthu.themovies.room
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import dev.ducthu.themovies.model.entity.Movie
 
 @Dao
 interface MovieDao {

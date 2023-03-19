@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package com.skydoves.themovies.room.converters
+package dev.ducthu.themovies.room.convertes
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
