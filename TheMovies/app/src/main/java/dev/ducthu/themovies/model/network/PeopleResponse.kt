@@ -1,4 +1,11 @@
 package dev.ducthu.themovies.model.network
 
-class PeopleResponse {
-}
+import dev.ducthu.themovies.model.NetworkResponseModel
+import dev.ducthu.themovies.model.entity.Person
+
+data class PeopleResponse(
+    val page: Int,
+    val results: List<Person>,
+    val total_results: Int,
+    val total_pages: Int,
+) : NetworkResponseModel
