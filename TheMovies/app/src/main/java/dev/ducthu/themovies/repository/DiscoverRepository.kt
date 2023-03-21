@@ -1,7 +1,6 @@
 package dev.ducthu.themovies.repository
 
 import androidx.lifecycle.LiveData
-import com.skydoves.themovies.room.TvDao
 import dev.ducthu.themovies.api.ApiResponse
 import dev.ducthu.themovies.api.TheDiscoverService
 import dev.ducthu.themovies.mapper.MovieResponseMapper
@@ -12,6 +11,7 @@ import dev.ducthu.themovies.model.entity.Tv
 import dev.ducthu.themovies.model.network.DiscoverMovieResponse
 import dev.ducthu.themovies.model.network.DiscoverTvResponse
 import dev.ducthu.themovies.room.MovieDao
+import dev.ducthu.themovies.room.TvDao
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
