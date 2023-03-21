@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package com.skydoves.themovies.room
+package dev.ducthu.themovies.room
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
@@ -30,7 +30,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.skydoves.themovies.models.entity.Tv
+import dev.ducthu.themovies.model.entity.Tv
 
 @Dao
 interface TvDao {

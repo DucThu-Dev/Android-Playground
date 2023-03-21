@@ -80,6 +80,8 @@ dependencies {
 
     // Architecture components
     implementation("androidx.lifecycle:lifecycle-viewmodel:2.3.1")
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
     kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
